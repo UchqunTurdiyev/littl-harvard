@@ -55,8 +55,29 @@ export function decodePayload(s: string): LeadPayload | null {
   }
 }
 
+/** "Sifatli" lid uchun Metaga ketadigan event nomi */
+export const QUALIFIED_EVENT = process.env.META_QUALIFIED_EVENT || "QualifiedLead";
+
+// ===== Sotuv sahifasi havolasi (/sotuv?d=...&m=...&s=...) =====
+// Havola faqat Telegram guruhda ko'rinadi; imzo uni soxtalashtirib bo'lmasligini ta'minlaydi.
+const linkSecret = () =>
+  process.env.LEAD_LINK_SECRET ||
+  process.env.TELEGRAM_WEBHOOK_SECRET ||
+  process.env.TELEGRAM_BOT_TOKEN ||
+  "";
+
+export const signLink = (d: string, m: string) =>
+  crypto.createHmac("sha256", linkSecret()).update(`${d}.${m}`).digest("base64url").slice(0, 32);
+
+export function verifyLink(d: string, m: string, s: string): boolean {
+  if (!linkSecret() || !d || !/^\d+$/.test(m) || !s) return false;
+  const a = Buffer.from(signLink(d, m));
+  const b = Buffer.from(s);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 type SendArgs = {
-  eventName: "Lead" | "Purchase";
+  eventName: string; // "Lead" | "Purchase" | QUALIFIED_EVENT
   eventId: string;
   p: LeadPayload;
   value?: number;
@@ -103,6 +124,8 @@ export async function sendCapiEvent({
       content_type: "product",
       order_id: p.id,
     };
+  } else if (eventName === QUALIFIED_EVENT) {
+    event.custom_data = { content_name: "Little Harvard — sifatli lid", lead_quality: "qualified" };
   } else {
     event.custom_data = { content_name: "Little Harvard — ariza" };
   }

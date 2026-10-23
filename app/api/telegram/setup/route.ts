@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const res = await tg("setWebhook", {
     url: `${SITE_URL}/api/telegram`,
     secret_token: process.env.TELEGRAM_WEBHOOK_SECRET,
-    allowed_updates: ["message", "callback_query"],
+    allowed_updates: ["callback_query"],
     drop_pending_updates: true,
   });
   const info = await tg("getWebhookInfo", {});

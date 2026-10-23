@@ -24,7 +24,8 @@ export default function MetaPixel() {
     window.fbq?.("track", "PageView");
   }, [pathname]);
 
-  if (!PIXEL_ID) return null;
+  // Operator sahifasi (/sotuv) Pixel statistikasini buzmasin
+  if (!PIXEL_ID || pathname?.startsWith("/sotuv")) return null;
 
   return (
     <>

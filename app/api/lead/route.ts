@@ -5,10 +5,12 @@ import {
   normalizePhone,
   sendCapiEvent,
   sha256,
+  signLink,
   splitName,
   type LeadPayload,
 } from "@/lib/meta";
 import { esc, leadKeyboard, tg } from "@/lib/telegram";
+import { SITE_URL } from "@/lib/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -91,6 +93,8 @@ export async function POST(req: NextRequest) {
     : "—";
   const time = new Date().toLocaleString("ru-RU", { timeZone: "Asia/Tashkent" });
 
+  // Karta faqat operatorga kerakli ma'lumotni ko'rsatadi.
+  // Xeshlar, cookie va Meta holati "Sotib oldi" tugmasi ochadigan sahifada.
   const text = [
     `🎓 <b>YANGI ARIZA — Little Harvard</b>`,
     ``,
@@ -99,38 +103,31 @@ export async function POST(req: NextRequest) {
     `📍 <b>Manzil:</b> ${esc(address)}`,
     `🕒 <b>Vaqt:</b> ${time}`,
     `📊 <b>UTM:</b> ${utmLine}`,
-    ``,
-    `🔐 <b>Xeshlangan ma'lumotlar (SHA-256):</b>`,
-    `ph: <code>${p.ph}</code>`,
-    p.fn ? `fn: <code>${p.fn}</code>` : "",
-    p.ln ? `ln: <code>${p.ln}</code>` : "",
-    `external_id: <code>${p.xid}</code>`,
-    ``,
-    `🍪 <b>Cookie:</b>`,
-    `_fbp: <code>${esc(fbp || "—")}</code>`,
-    `_fbc: <code>${esc(fbc || "—")}</code>`,
-    `IP: <code>${esc(ip || "—")}</code>`,
-    ``,
-    `📡 Meta Lead: ${capi.ok ? "✅ " + capi.info : "⚠️ " + esc(capi.info)}`,
-    `🆔 <code>${id}</code>`,
-    ``,
-    `<code>LH1:${encodePayload(p)}</code>`,
+    capi.ok ? "" : `\n⚠️ Meta Lead yuborilmadi: ${esc(capi.info)}`,
   ]
-    .filter((l) => l !== "")
     .join("\n")
-    .replace("</b>\n👤", "</b>\n\n👤")
-    .replace("\n🔐", "\n\n🔐")
-    .replace("\n🍪", "\n\n🍪")
-    .replace("\n📡", "\n\n📡")
-    .replace("\n<code>LH1", "\n\n<code>LH1");
+    .trimEnd();
 
-  const sent = await tg("sendMessage", {
+  const sent = await tg<{ message_id: number }>("sendMessage", {
     chat_id: process.env.TELEGRAM_CHAT_ID,
     text,
     parse_mode: "HTML",
     disable_web_page_preview: true,
-    reply_markup: leadKeyboard(id),
+    reply_markup: leadKeyboard(id, null),
   });
+
+  // Havolaga xabar ID'si kerak (sotuvdan keyin tugmani yangilash uchun) — shuning uchun keyin qo'shamiz
+  if (sent.ok && sent.result) {
+    const d = encodePayload(p);
+    const m = String(sent.result.message_id);
+    const saleUrl = `${SITE_URL}/sotuv?d=${d}&m=${m}&s=${signLink(d, m)}`;
+    const edited = await tg("editMessageReplyMarkup", {
+      chat_id: process.env.TELEGRAM_CHAT_ID,
+      message_id: sent.result.message_id,
+      reply_markup: leadKeyboard(id, saleUrl),
+    });
+    if (!edited.ok) console.error("Telegram tugma xato:", edited.description);
+  }
 
   if (!sent.ok) {
     console.error("Telegram xato:", sent.description);

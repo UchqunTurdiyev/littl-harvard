@@ -531,7 +531,7 @@ export default function Home() {
       <div className="mobile-cta">
         <a href={SCHOOL.phoneHref} className="btn btn--ghost-dark" aria-label="Qo'ng'iroq">📞</a>
         <a href="#ariza" className="btn btn--gold btn--block">
-          Ariza qoldirish <span className="btn__shine" />
+          Qo&apos;shimcha ma&apos;lumot uchun <span className="btn__shine" />
         </a>
       </div>
     </>

@@ -1,6 +1,6 @@
 # Little Harvard — landing (Next.js App Router)
 
-Xususiy maktab uchun sotuvga moslangan landing: forma → Telegram bot (xeshlangan ma'lumot + cookie) → Meta CAPI Lead → bot orqali **Purchase + summa** (ROAS) → rahmat sahifasi (10 soniya animatsion sanash) → Telegram guruh.
+Xususiy maktab uchun sotuvga moslangan landing: forma → Telegram bot → Meta CAPI Lead → **Sifatli lid** va **Purchase + summa** (ROAS) Metaga → rahmat sahifasi (10 soniya animatsion sanash) → Telegram guruh.
 
 ## Oqim
 
@@ -9,12 +9,18 @@ Xususiy maktab uchun sotuvga moslangan landing: forma → Telegram bot (xeshlang
    - telefon `998XXXXXXXXX` ga normallashtiriladi, `ph / fn / ln / external_id` SHA-256 bilan xeshlanadi;
    - `_fbp`, `_fbc` cookie, IP, User-Agent, UTM yig'iladi;
    - **Meta CAPI → Lead** (brauzer Pixel bilan bir xil `event_id` — dublikat bo'lmaydi);
-   - **Telegram guruhga** lid kartasi tushadi: ism, telefon, manzil, UTM, xeshlar, cookie'lar + `✅ Sotib oldi` / `❌ Rad etdi` tugmalari.
+   - **Telegram guruhga** lid kartasi tushadi: ism, telefon, manzil, vaqt, UTM va tugmalar:
+     - `💰 Sotib oldi — summa kiritish` (havola)
+     - `✅ Sifatli` / `❌ Sifatsiz`
 3. Brauzer `/rahmat` sahifasiga o'tadi → 10 soniya sanaladi → `NEXT_PUBLIC_TG_GROUP_URL` ga yo'naltiriladi.
-4. Operator mijoz to'lov qilganda guruhda **✅ Sotib oldi** bosadi → bot summani so'raydi → operator shu xabarga **reply** qilib summani yozadi (`4 500 000`, `4.5mln`, `800k`) → **Meta CAPI → Purchase (value + UZS)** yuboriladi → tugma `✅ SOTIB OLDI — 4 500 000 so'm` ga aylanadi.
-   Purchase lid bilan bir xil `fbc / fbp / ph / external_id` bilan ketadi → Ads Manager'da **Purchase ROAS** ko'rinadi.
+4. **✅ Sifatli** → Metaga `QualifiedLead` eventi (`META_QUALIFIED_EVENT`) ketadi, tugma `✅ Sifatli — Metaga yuborildi (operator)` ga aylanadi.
+   **❌ Sifatsiz** → faqat belgilanadi (Metaga hech narsa ketmaydi), `o'zgartirish` bilan qayta ochiladi.
+5. **💰 Sotib oldi** → brauzerda `/sotuv` sahifasi ochiladi: mijoz ismi, xeshlangan ma'lumotlar, cookie'lar va summa maydoni. Summa yozib **Yuborish** bosilsa → **Meta CAPI → Purchase (value + UZS)** + `QualifiedLead` → kartadagi tugmalar `✅ SOTIB OLDI — 4 500 000 so'm` ga aylanadi va guruhga tasdiq xabari tushadi.
+   Hammasi lid bilan bir xil `fbc / fbp / ph / external_id` bilan ketadi → Ads Manager'da **Purchase ROAS** va sifatli lidlar ko'rinadi.
 
-> Ma'lumotlar bazasi shart emas: lid ma'lumoti xabar ichidagi `LH1:...` kodida saqlanadi va Purchase paytida o'sha yerdan o'qiladi. Shu satrni o'chirmang.
+> Ma'lumotlar bazasi shart emas: lid ma'lumoti `Sotib oldi` havolasining ichida (imzolangan) saqlanadi. Havolani boshqalarga yubormang — u orqali Purchase yuborish mumkin.
+
+> Metada sifatli lidlar bo'yicha optimizatsiya qilish: Events Manager → Custom conversions → `QualifiedLead` eventidan custom conversion yarating va kampaniyada shuni tanlang.
 
 ## O'rnatish
 
@@ -31,6 +37,8 @@ npm run dev
 | `META_ACCESS_TOKEN` | Events Manager → Settings → Conversions API → Generate access token |
 | `META_TEST_EVENT_CODE` | Test vaqtida `TEST...` kodi, ishga tushganda bo'sh |
 | `META_PURCHASE_CURRENCY` | `UZS` (standart) |
+| `META_QUALIFIED_EVENT` | Sifatli lid event nomi, standart `QualifiedLead` |
+| `LEAD_LINK_SECRET` | Ixtiyoriy. `Sotib oldi` havolasini imzolash kaliti |
 | `TELEGRAM_BOT_TOKEN` | @BotFather |
 | `TELEGRAM_CHAT_ID` | Lidlar tushadigan guruh ID (`-100...`). Bot guruhga **admin** qilib qo'shilsin |
 | `TELEGRAM_WEBHOOK_SECRET` | Tasodifiy satr (harf, raqam, `_`, `-`) |
@@ -50,8 +58,9 @@ Javobda `"ok": true` va `url` sizning domeningiz bo'lsa — tayyor.
 
 ## Tekshirish
 1. `META_TEST_EVENT_CODE` qo'ying → forma yuboring → Events Manager → Test events'da **Lead (Server + Browser, deduplicated)**.
-2. Guruhda `✅ Sotib oldi` → summa → Test events'da **Purchase** value bilan.
-3. Ishga tushirishda `META_TEST_EVENT_CODE` ni bo'shating.
+2. Guruhda `✅ Sifatli` → Test events'da **QualifiedLead**.
+3. `💰 Sotib oldi` → summa → Yuborish → Test events'da **Purchase** value bilan.
+4. Ishga tushirishda `META_TEST_EVENT_CODE` ni bo'shating.
 
 ## Tahrirlash
 - Maktab ma'lumotlari (telefon, manzil, Instagram): `lib/config.ts`

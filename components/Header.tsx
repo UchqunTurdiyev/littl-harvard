@@ -35,7 +35,7 @@ export default function Header() {
             {SCHOOL.phone}
           </a>
           <a href="#ariza" className="btn btn--gold btn--sm">
-            Ariza qoldirish
+            Qo&apos;shimcha ma&apos;lumot uchun
           </a>
         </div>
       </div>

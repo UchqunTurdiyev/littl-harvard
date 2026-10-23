@@ -1781,3 +1781,88 @@ section[id] {
     transform: none;
   }
 }
+
+/* ========= Sotuv (operator) ========= */
+.sale {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+  background: radial-gradient(120% 80% at 50% 0%, #2350a8 0%, var(--ink) 55%, #0f2250 100%);
+}
+.sale__card {
+  width: 100%;
+  max-width: 460px;
+  padding: 28px 22px;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.sale__card h1 {
+  margin: 8px 0 4px;
+  font-size: clamp(24px, 6vw, 30px);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.sale__tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--gold-3);
+  font-size: 13px;
+  font-weight: 800;
+}
+.sale__muted {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.sale__preview {
+  min-height: 1.6em;
+  margin: -4px 0 10px;
+  color: var(--ink-3);
+  font-weight: 800;
+}
+.sale__done {
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #e9f9ef;
+  color: var(--ok);
+  text-align: center;
+}
+.sale__done span {
+  font: 900 26px var(--font-display);
+  color: var(--ink);
+}
+.sale__done small {
+  color: var(--muted);
+}
+.sale__hash {
+  margin-top: 22px;
+  font-size: 13px;
+}
+.sale__hash summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+.sale__hash dl {
+  margin: 10px 0 0;
+}
+.sale__hash dl div {
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+.sale__hash dt {
+  font-weight: 700;
+  color: var(--muted);
+}
+.sale__hash dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}

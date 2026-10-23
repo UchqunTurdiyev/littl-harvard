@@ -13,8 +13,9 @@ export const SCHOOL = {
   email: "littleharvarduz@gmail.com",
 };
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://littleharvard.uz";
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://littleharvard.uz"
+).replace(/\/+$/, "");
 
 export const TG_GROUP_URL =
   process.env.NEXT_PUBLIC_TG_GROUP_URL || "https://t.me/littleharvard_uz";
