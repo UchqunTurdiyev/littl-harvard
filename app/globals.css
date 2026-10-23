@@ -671,32 +671,26 @@ section[id] {
 /* Problems */
 .problems {
   display: grid;
-  gap: 12px;
+  gap: 0;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 .problem {
   display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 18px 20px;
-  border-radius: var(--radius);
-  background: #fff;
-  border: 1px solid var(--line);
-  box-shadow: 0 12px 30px -24px rgba(22, 48, 107, 0.5);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
   font-weight: 600;
+}
+.problem:last-child {
+  border-bottom: 0;
 }
 .problem span {
   flex: none;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #fdeceb;
   color: var(--bad);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
 }
 .problems__note {

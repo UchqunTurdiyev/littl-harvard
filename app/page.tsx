@@ -20,14 +20,6 @@ const problems = [
   "Pul to'laysiz, lekin natijani ko'rmaysiz",
 ];
 
-// 3. Agitatsiya — hal qilinmasa nima bo'ladi
-const consequences = [
-  { t: "O'qishni yomon ko'radi", d: "Har bir dars bola uchun majburiyatga aylanadi." },
-  { t: "Bilimi orqada qoladi", d: "Yuqori sinfda repetitorlarga ko'proq vaqt va pul ketadi." },
-  { t: "O'ziga ishonmay qoladi", d: "\"Men uddalay olmayman\" deb o'ylay boshlaydi." },
-  { t: "Kasbini topa olmaydi", d: "Diplom bo'ladi, lekin sevgan ishi va kuchli kasbi bo'lmaydi." },
-];
-
 // 4. Yechim — oddiy maktab va Little Harvard farqi
 const compare = [
   { bad: "Hammaga bir xil dars", good: "Har bir bolaga alohida e'tibor — qobiliyati kuzatib boriladi" },
@@ -49,10 +41,6 @@ const features = [
   { icon: "🛡️", t: "To'liq xavfsizlik", d: "Qo'riqlash xizmati, kuzatuv kameralari va Face ID kirish tizimi." },
 ];
 
-// 5. Ota-onalar sharhlari — faqat haqiqiy sharhlarni qo'shing (ism, kimning ota-onasi, matn).
-// Massiv bo'sh bo'lsa, blok ko'rsatilmaydi.
-const reviews: { name: string; who: string; text: string }[] = [];
-
 const stages = [
   { y: "Bog'cha", t: "Maktabgacha ta'lim", d: "Mustahkam poydevor: nutq, fikrlash, maktabga tayyorgarlik." },
   { y: "2015", t: "Boshlang'ich sinflar", d: "O'qishga qiziqish va to'g'ri o'quv odatlari shakllanadi." },
@@ -60,40 +48,6 @@ const stages = [
   { y: "2020", t: "Yuqori sinflar", d: "Sertifikatlar va oliy ta'limga tayyorgarlik." },
 ];
 
-const faq = [
-  {
-    q: "Qaysi yoshdagi bolalar qabul qilinadi?",
-    a: "Little Harvard — maktab va bog'cha. Maktabgacha yoshdagi bolalar hamda boshlang'ich, o'rta va yuqori sinf o'quvchilari qabul qilinadi. Aniq bo'sh o'rinlarni ariza qoldirganingizdan so'ng mutaxassisimiz aytib beradi.",
-  },
-  {
-    q: "O'qish narxi qancha?",
-    a: "Narx sinf va yo'nalishga qarab farq qiladi. Ariza qoldiring — mutaxassisimiz farzandingizga mos variantni va amaldagi chegirmalarni tushuntiradi.",
-  },
-  {
-    q: "Agar bola mavzularni o'zlashtira olmasa-chi?",
-    a: "Bizda kafolat bor: 9 oy davomida o'zlashtirish bo'lmasa, qo'shimcha darslar bepul beriladi.",
-  },
-  {
-    q: "To'garaklar uchun bolani boshqa joyga olib borish kerakmi?",
-    a: "Yo'q. Meditsina, STEM, muhandislik, Xitoy tili, IT va sport to'garaklari maktabning o'zida o'tkaziladi.",
-  },
-  {
-    q: "Bola yangi maktabga moslasha oladimi?",
-    a: "Har bir yangi o'quvchini mutaxassislarimiz individual kuzatib boradi. Ota-onalar odatda ilk oydayoq bolaning o'ziga ishonchi va maktabga borish ishtiyoqi ortganini sezadi.",
-  },
-  {
-    q: "Ovqatlanish qanday tashkil etilgan?",
-    a: "Kuniga 4 mahal muvozanatlashtirilgan ovqat beriladi.",
-  },
-  {
-    q: "Bolaning xavfsizligi qanday ta'minlanadi?",
-    a: "Maktabda qo'riqlash xizmati, kuzatuv kameralari va Face ID kirish tizimi ishlaydi.",
-  },
-  {
-    q: "Natijani qanday bilib boraman?",
-    a: "Har oy monitoring o'tkaziladi. Yuqori natija ko'rsatgan o'quvchilar grant asosida chegirma yoki bepul oy oladi.",
-  },
-];
 
 export default function Home() {
   return (
@@ -203,15 +157,6 @@ export default function Home() {
               <span className="kicker">Agar hozir hal qilinmasa</span>
               <h2>Bu muammolar o&apos;z-o&apos;zidan yo&apos;qolmaydi — yildan-yilga kattalashadi</h2>
             </Reveal>
-            <ol className="chain">
-              {consequences.map((c, i) => (
-                <Reveal as="li" key={c.t} delay={i * 100} className="chain__item">
-                  <span className="chain__n">{i + 1}</span>
-                  <h3>{c.t}</h3>
-                  <p>{c.d}</p>
-                </Reveal>
-              ))}
-            </ol>
             <Reveal className="chain__quote">
               Ammo esda tuting: <b>bolalik qaytib kelmaydi.</b>
             </Reveal>
@@ -303,43 +248,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section section--dark" id="natija">
-          <div className="container">
-            <Reveal className="sec-head sec-head--light">
-              <span className="kicker">So&apos;z emas — natija</span>
-              <h2>O&apos;quvchilarimiz natijalari gapiradi</h2>
-              <p>Bu natijalar — to&apos;g&apos;ri muhit va to&apos;g&apos;ri yondashuv samarasi.</p>
-            </Reveal>
-            <div className="results">
-              <Reveal className="result">
-                <div className="result__big gold-text">IELTS 7.5</div>
-                <p>Ingliz tilidan — hali 10-sinfda o&apos;qiyotgan o&apos;quvchimiz natijasi</p>
-              </Reveal>
-              <Reveal className="result" delay={100}>
-                <div className="result__big gold-text">🏆 Xalqaro</div>
-                <p>Matematikadan xalqaro musobaqalarda o&apos;rinlar</p>
-              </Reveal>
-              <Reveal className="result" delay={200}>
-                <div className="result__big gold-text">O&apos;ziga ishonch</div>
-                <p>Ota-onalar eng ko&apos;p ko&apos;radigan o&apos;zgarish: ishonch, akademik o&apos;sish, o&apos;qishga qiziqish</p>
-              </Reveal>
-            </div>
-            {reviews.length > 0 && (
-              <div className="reviews">
-                {reviews.map((r, i) => (
-                  <Reveal as="figure" key={r.name} delay={i * 100} className="review">
-                    <blockquote>&ldquo;{r.text}&rdquo;</blockquote>
-                    <figcaption>
-                      <b>{r.name}</b>
-                      <span>{r.who}</span>
-                    </figcaption>
-                  </Reveal>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
-
         {/* ============ 6. TAKLIF (OFFER) ============ */}
         <section className="section section--cream" id="kafolat">
           <div className="container">
@@ -407,28 +315,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ 7. CTA ============ */}
-        <section className="section">
-          <div className="container">
-            <Reveal className="sec-head">
-              <span className="kicker">Endi navbat sizda</span>
-              <h2>Boshlash juda oson — atigi 3 qadam</h2>
-            </Reveal>
-            <div className="steps">
-              {[
-                ["01", "Formani to'ldiring", "Ismingiz va telefoningizni yozing — 30 soniya."],
-                ["02", "Biz qo'ng'iroq qilamiz", "Mutaxassis hammasini tushuntiradi — bepul."],
-                ["03", "Maktabni ko'ring", "Kelib, o'z ko'zingiz bilan ko'rasiz va qaror qilasiz."],
-              ].map(([n, t, d], i) => (
-                <Reveal key={n} delay={i * 110} className="step">
-                  <span className="step__n">{n}</span>
-                  <h3>{t}</h3>
-                  <p>{d}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
 
         <section className="final" id="ariza">
           <div className="hero__bg" aria-hidden>
@@ -482,36 +368,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ 8. FAQ ============ */}
-        <section className="section section--cream" id="savol">
-          <div className="container narrow">
-            <Reveal className="sec-head">
-              <span className="kicker">Savol-javob</span>
-              <h2>Ko&apos;p beriladigan savollar</h2>
-            </Reveal>
-            <div className="faq">
-              {faq.map((f, i) => (
-                <Reveal key={f.q} delay={i * 50}>
-                  <details>
-                    <summary>{f.q}</summary>
-                    <p>{f.a}</p>
-                  </details>
-                </Reveal>
-              ))}
-            </div>
-            <Reveal className="faq__cta">
-              <p>Savolingiz qoldimi? Eng yaxshisi — mutaxassisimizning o&apos;zidan so&apos;rang. Bu bepul.</p>
-              <div className="hero__actions">
-                <a href="#ariza" className="btn btn--gold">
-                  Bepul konsultatsiya <span className="btn__shine" />
-                </a>
-                <a href={SCHOOL.phoneHref} className="btn btn--ghost-dark">
-                  📞 {SCHOOL.phone}
-                </a>
-              </div>
-            </Reveal>
-          </div>
-        </section>
       </main>
 
       <footer className="footer">

@@ -28,7 +28,7 @@ function newEventId() {
 export default function LeadForm({
   id,
   title = "Maktab bilan tanishuvga yoziling",
-  subtitle = "Ma'lumot qoldiring — mutaxassisimiz tez orada qo'ng'iroq qilib, barcha savollarga javob beradi",
+  subtitle = "Manzil: Toshkent shahar",
   button = "Ariza yuborish",
   dark = false,
 }: {

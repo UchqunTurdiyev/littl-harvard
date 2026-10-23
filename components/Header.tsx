@@ -26,9 +26,7 @@ export default function Header() {
         <nav className="nav">
           <a href="#afzallik">Uslubimiz</a>
           <a href="#bosqich">Sinflar</a>
-          <a href="#natija">Natijalar</a>
           <a href="#kafolat">Taklif</a>
-          <a href="#savol">Savollar</a>
         </nav>
         <div className="header__cta">
           <a href={SCHOOL.phoneHref} className="header__phone">
