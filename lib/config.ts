@@ -4,8 +4,10 @@ export const SCHOOL = {
   name: "Little Harvard",
   fullName: "Little Harvard — xususiy maktab va bog'cha",
   since: 2015,
-  phone: "+998 90 935 47 00",
-  phoneHref: "tel:+998909354700",
+  phone: "+998 77 362 40 40",
+  phoneHref: "tel:+998773624040",
+  phone2: "+998 77 368 40 40",
+  phone2Href: "tel:+998773684040",
   address: "Toshkent sh., Chilonzor tumani, Chilonzor-1 mavzesi, 30-uy",
   mapUrl:
     "https://yandex.uz/maps/?text=Little%20Harvard%20Chilonzor-1%2030%20Toshkent",

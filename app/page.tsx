@@ -345,6 +345,9 @@ export default function Home() {
                   📞 <a href={SCHOOL.phoneHref}>{SCHOOL.phone}</a>
                 </li>
                 <li>
+                  📞 <a href={SCHOOL.phone2Href}>{SCHOOL.phone2}</a>
+                </li>
+                <li>
                   📸{" "}
                   <a href={SCHOOL.instagram} target="_blank" rel="noopener noreferrer">
                     @littleharvard.uz
