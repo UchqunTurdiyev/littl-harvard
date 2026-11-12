@@ -501,6 +501,16 @@ section[id] {
   color: var(--muted);
   font-size: 14px;
 }
+.region-ask__q {
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+}
+.region-switch__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .region-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;

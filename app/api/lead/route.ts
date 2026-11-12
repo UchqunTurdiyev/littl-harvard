@@ -36,15 +36,13 @@ export async function POST(req: NextRequest) {
   if (b.hp) return NextResponse.json({ ok: true, id: "x" });
 
   const name = (b.name || "").trim().slice(0, 80);
-  const address = (b.address || "").trim().slice(0, 200);
+  const address = (b.address || "").trim().slice(0, 200) || "Toshkent — Chilonzor qulay (Ha)";
   const phone = normalizePhone(b.phone || "");
 
   if (name.length < 2)
     return NextResponse.json({ ok: false, error: "Ismingizni kiriting" }, { status: 400 });
   if (!phone)
     return NextResponse.json({ ok: false, error: "Telefon raqam noto'g'ri" }, { status: 400 });
-  if (address.length < 3)
-    return NextResponse.json({ ok: false, error: "Manzilni kiriting" }, { status: 400 });
 
   const id =
     b.eventId && /^[a-zA-Z0-9_-]{8,64}$/.test(b.eventId)

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SCHOOL } from "@/lib/config";
 
 /** +998 (90) 123-45-67 ko'rinishidagi niqob */
@@ -17,6 +17,9 @@ function maskPhone(raw: string) {
   if (d.length > 7) out += "-" + d.slice(7, 9);
   return out;
 }
+
+const NO_KEY = "lh_not_tashkent";
+const NO_EVENT = "lh-not-tashkent";
 
 function newEventId() {
   try {
@@ -44,17 +47,39 @@ export default function LeadForm({
   const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
-  const [address, setAddress] = useState("");
   const [hp, setHp] = useState("");
-  const [region, setRegion] = useState<"tashkent" | "other">("tashkent");
+  // null — hali javob berilmagan; "yes" — forma; "no" — faqat qo'ng'iroq (qaytib bo'lmaydi)
+  const [answer, setAnswer] = useState<"yes" | "no" | null>(null);
+
+  // "Yo'q" bir marta bosilsa — sahifadagi barcha formalarda va qayta kirganda ham qulflanadi
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(NO_KEY) === "1") setAnswer("no");
+    } catch {}
+    const onNo = () => setAnswer("no");
+    window.addEventListener(NO_EVENT, onNo);
+    return () => window.removeEventListener(NO_EVENT, onNo);
+  }, []);
+
+  function chooseNo() {
+    setAnswer("no");
+    setError("");
+    try {
+      localStorage.setItem(NO_KEY, "1");
+    } catch {}
+    window.dispatchEvent(new Event(NO_EVENT));
+  }
+
+  function chooseYes() {
+    if (answer === "no") return;
+    setAnswer("yes");
+    setError("");
+  }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const digits = phone.replace(/\D/g, "").replace(/^998/, "");
-  const valid =
-    name.trim().length >= 2 &&
-    digits.length === 9 &&
-    address.trim().length >= 3;
+  const valid = name.trim().length >= 2 && digits.length === 9;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,9 +88,7 @@ export default function LeadForm({
       setError(
         name.trim().length < 2
           ? "Ismingizni kiriting"
-          : digits.length !== 9
-            ? "Telefon raqamni to'liq kiriting"
-            : "Manzilingizni kiriting",
+          : "Telefon raqamni to'liq kiriting",
       );
       return;
     }
@@ -78,7 +101,7 @@ export default function LeadForm({
         body: JSON.stringify({
           name,
           phone: "998" + digits,
-          address,
+          address: "Toshkent — Chilonzor qulay (Ha)",
           eventId,
           url: window.location.href,
           hp,
@@ -119,43 +142,34 @@ export default function LeadForm({
         <p>{subtitle}</p>
       </div>
 
-      <div
-        className="region-switch"
-        role="tablist"
-        aria-label="Hududni tanlang"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={region === "tashkent"}
-          className={`region-switch__btn ${region === "tashkent" ? "is-active" : ""}`}
-          onClick={() => {
-            setRegion("tashkent");
-            setError("");
-          }}
-        >
-          Toshkent
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={region === "other"}
-          className={`region-switch__btn ${region === "other" ? "is-active" : ""}`}
-          onClick={() => {
-            setRegion("other");
-            setError("");
-          }}
-        >
-          Boshqa viloyatlar
-        </button>
+      <div className="region-ask">
+        <p className="region-ask__q">Toshkentdamisiz, Chilonzor sizga qulaymi?</p>
+        <div className="region-switch" role="group" aria-label="Javobni tanlang">
+          <button
+            type="button"
+            aria-pressed={answer === "yes"}
+            disabled={answer === "no"}
+            className={`region-switch__btn ${answer === "yes" ? "is-active" : ""}`}
+            onClick={chooseYes}
+          >
+            Ha
+          </button>
+          <button
+            type="button"
+            aria-pressed={answer === "no"}
+            className={`region-switch__btn ${answer === "no" ? "is-active" : ""}`}
+            onClick={chooseNo}
+          >
+            Yo'q
+          </button>
+        </div>
       </div>
 
-      {region === "other" ? (
+      {answer === null ? null : answer === "no" ? (
         <div className="region-call">
           <p>
-            Viloyatlardan murojaat qilayotgan bo'lsangiz, iltimos, bizga
-            to'g'ridan-to'g'ri qo'ng'iroq qiling — barcha savollaringizga javob
-            beramiz.
+            Unda iltimos, bizga to'g'ridan-to'g'ri qo'ng'iroq qiling — barcha
+            savollaringizga javob beramiz.
           </p>
           <a href={SCHOOL.phoneHref} className="btn btn--gold btn--block">
             📞 {SCHOOL.phone}
@@ -189,18 +203,6 @@ export default function LeadForm({
               value={phone}
               onChange={(e) => setPhone(maskPhone(e.target.value))}
               onFocus={() => phone === "" && setPhone("+998")}
-              required
-            />
-          </label>
-
-          <label className="field">
-            <span>Manzilingiz</span>
-            <input
-              type="text"
-              autoComplete="street-address"
-              placeholder="Tuman, mavze yoki ko'cha"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </label>
