@@ -165,7 +165,7 @@ export default function LeadForm({
         </div>
       </div>
 
-      {answer === null ? null : answer === "no" ? (
+      {answer === "no" ? (
         <div className="region-call">
           <p>
             Unda iltimos, bizga to'g'ridan-to'g'ri qo'ng'iroq qiling — barcha
@@ -181,6 +181,11 @@ export default function LeadForm({
         </div>
       ) : (
         <>
+          {answer === null && (
+            <p className="form-hint">
+              Ma'lumot kiritish uchun avval yuqoridagi savolga javob bering
+            </p>
+          )}
           <label className="field">
             <span>Ismingiz</span>
             <input
@@ -189,6 +194,7 @@ export default function LeadForm({
               placeholder="Masalan: Dilnoza"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              disabled={answer === null}
               required
             />
           </label>
@@ -203,6 +209,7 @@ export default function LeadForm({
               value={phone}
               onChange={(e) => setPhone(maskPhone(e.target.value))}
               onFocus={() => phone === "" && setPhone("+998")}
+              disabled={answer === null}
               required
             />
           </label>
@@ -222,7 +229,7 @@ export default function LeadForm({
           <button
             type="submit"
             className="btn btn--gold btn--block"
-            disabled={loading}
+            disabled={loading || answer === null}
           >
             {loading ? <span className="spinner" /> : button}
             {!loading && <span className="btn__shine" />}
